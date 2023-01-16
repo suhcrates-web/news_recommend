@@ -1,0 +1,9 @@
+JVMNotFoundException: No JVM shared library file (jvm.dll) found. Try setting up the JAVA_HOME environment variable properly.
+
+
+
+_jvmfinder.py  파일에서
+
+java_home = "C:\\Program Files\\Java\\jdk-17.0.5\\bin\\server" 
+이거 추가하니까 해결됨
+

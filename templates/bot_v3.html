@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>자동뉴스추천</title>
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+
+</script>
+
+<script src="{{ url_for('static', filename='js/bot_v3.js') }}"></script>
+<style>
+    .onmouse {
+        background: rgb(255, 249, 160)
+    }
+    .onclick {
+        background: rgb(255, 249, 160)
+    }
+    .ok{
+        background: rgb(255, 249, 160)
+    }
+    .jja{
+        background: rgb(255, 102, 0)
+    }
+    .kill{
+        background: rgb(255, 77, 77)
+    }
+</style>
+{% endblock head %}
+
+
+{% block body %}
+
+
+<div style= "max-height:90%;position:sticky; top: 50px; bottom: 3000; left:400px;  width:500px;"
+    >
+<p>◎ 자동 추천목록◎</p>
+    <div id="top10">
+{% autoescape false %}
+     {{ top10 }}
+ {% endautoescape %}
+        </div>
+</div>
+<br>
+<div style="max-height:90%; overflow:scroll; overflow-y:auto;overflow-x:auto; position:sticky; top: 450px; bottom: 3000; left:400px; padding-right:50px; width:500px; word-wrap:break-word"
+    >
+    ◎기사 벡터◎
+    <div id="content">{{vec_article}}</div>
+
+</div>
+
+<div style="max-height:90%; overflow:scroll; overflow-y:auto;overflow-x:auto; position:sticky; top: 550px; bottom: 3000; left:400px; padding-right:50px; width:500px; word-wrap:break-word"
+    >
+<p>◎{{ip}} 사용자 벡터◎</p>
+    <div id='vec' style = "color:red" >
+{% autoescape false %}
+     {{ vec }}
+ {% endautoescape %}
+        </div>
+    </div>
+
+
+
+<table style="margin-top:-400px; width:300px; font-size:10pt;border:1px solid #7f7f7f;" border="1" cellspacing="0" cellpadding="1"
+    data-mce-style="font-size: 10pt; border: 1px solid #7f7f7f;">
+    <tr id='avoid'>
+    <th>
+
+    <td>날짜</td>
+    <td>제목</td>
+    <td>상태</td>
+    </th>
+    </tr>
+    {% for obj in objs %}
+
+
+
+
+    <tr id={{obj.num0}} class="main">
+
+        <td>{{ obj.num0 }}</td>
+        <td>{{ obj.date }}</td>
+        <td>
+            <p>{{ obj.title }} </p>
+
+        </td>
+        <td id="{{obj.ind}}td"></td>
+        <script>
+
+     
+
+                $(document).ready(function (){
+                    if("{{obj.desk}}" =='' | "{{obj.desk}}" =='0'){
+                        $('#{{obj.ind}}td').addClass('ok')
+                        .html('<h6>굳</h6>')
+                    }else if("{{obj.desk}}" =='1'){
+                        $('#{{obj.ind}}td').addClass('jja')
+                        .html('<h6>안 중요</h6>')
+                    }else if("{{obj.desk}}" =='2'){
+                        $('#{{obj.ind}}td').addClass('kill')
+                        .html('<h6>오류</h6>')
+                    };
+
+                    $("#{{obj.ind}}").hover(function () {
+                        $("#{{obj.ind}}").toggleClass('onmouse');
+                    })
+                });
+
+            </script>
+        <!--
+        <td><a href = "/bot/{{obj.ind}}">{{obj.title}}</a></td>
+    -->
+
+
+    </tr>
+    {% endfor %}
+</table>
+
+{% for pagename in pagenames %}
+<a href='/bot_v3/{{pagename}}/'>{{pagename}}</a><br>
+{% endfor %}
+
+<!--
+<form action="/bot_v3/{{day_0}}/" method="POST">
+    <input type="text" name="title" id="content">
+    <input type="text" name="article" id="content">
+
+    <input type="submit" value="Add">
+
+</form>
+-->
+{% endblock body %}`
