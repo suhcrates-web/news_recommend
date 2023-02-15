@@ -39,7 +39,7 @@ headers2 = {
 }
 
 temp = requests.get(url, headers=headers)
-
+print(temp.content)
 rows = json.loads(temp.content.decode())['result']['statDataList'][1]['data']['rows']
 print(rows['title'])
 exit()

@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import mysql.connector
 import binascii, codecs
 import time
+import timeit
 import mysql.connector
 import requests
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
@@ -39,9 +40,10 @@ for uri, article, title, cv_p, date0, vector in cursor.fetchall():
         vectors.append(np.array(json.loads(vector)[0]))
 
 okt = Okt()
-
+vectors_mat = np.array(vectors)
 
 def find_10(gijun_array):
+    start = time.time()
     points = Counter()
     titles_10 = []
     for num0, bigyo in enumerate(vectors):
@@ -53,8 +55,28 @@ def find_10(gijun_array):
     for num, _ in top10:
         html0 += '#' +titles[num] + "<BR>"
         # titles_10.append(titles[num])
+    end = time.time()
+    print(f"걸린 시간 : {end-start}")
+
     return html0
 
+def find_10_alt(gijun_array):
+    start = timeit.default_timer()
+    points = Counter()
+    titles_10 = []
+
+    points = np.matmul(vectors_mat, gijun_array)
+    top10 = np.argsort(points)[::-1][:10]
+
+    html0 = ""
+    for num in top10:
+        html0 += '#' +titles[num] + "<BR>"
+        # titles_10.append(titles[num])
+    end = timeit.default_timer()
+    time0 = end - start
+    print(f"걸린 시간 : {time0}")
+
+    return html0, time0
 
 @app.route('/', methods=['get'])
 def main0():
@@ -98,14 +120,14 @@ def main0():
 
     objs = []
     ran0 = np.random.rand(50)
-    title_10 = find_10(ran0)
+    title_10, calcul_time0 = find_10_alt(ran0)
     for num in range(len(titles)):
         objs.append({
             'title': titles[num],
             'date' : time0[num],
             'num0' : num
         })
-    return render_template('bot_v3.html', objs=objs, top10= title_10, vec= vec_send.round(4), ip=ip)
+    return render_template('bot_v3.html', objs=objs, top10= title_10, vec= vec_send.round(4), ip=ip, time0=calcul_time0)
 
 
 @app.route('/repl', methods=['POST', 'GET'])
@@ -135,7 +157,7 @@ def read_article():
         p = 0.3
         vec_user = (1-p) * vec_article + p * vec_user
 
-        top10 = find_10(vec_user)
+        top10, time0 = find_10_alt(vec_user)
 
         cursor.execute(
             f"""
@@ -144,7 +166,7 @@ def read_article():
         db.commit()
 
 
-        return {'vec_article':list(vec_article.round(2)), 'vec_user':list(vec_user.round(2)), 'top10':top10}
+        return {'vec_article':list(vec_article.round(2)), 'vec_user':list(vec_user.round(2)), 'top10':top10, 'time0':time0}
         # return render_template('vec.html', vec_article=vectors[num0].round(4))
 
 

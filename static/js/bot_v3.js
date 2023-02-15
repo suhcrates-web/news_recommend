@@ -20,6 +20,7 @@ $(document).ready(function(){
 			$('#content').html("["+[data['vec_article']]+"]")
 			$('#vec').html("["+[data['vec_user']]+"]")
 			$('#top10').html([data['top10']])
+			$('#time0').html([data['time0']])
 		})
 		//아직 on click
 		// event.preventDefault();
