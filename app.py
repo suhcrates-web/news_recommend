@@ -7,13 +7,10 @@ import time
 import timeit
 import mysql.connector
 import requests
-from gensim.models.doc2vec import Doc2Vec, TaggedDocument
-import gensim
-import gensim.downloader as api
 import json
 from database import cursor, db
 import codecs
-from konlpy.tag import Kkma, Komoran, Okt
+# from konlpy.tag import Kkma, Komoran, Okt
 import numpy as np
 from collections import Counter
 
@@ -39,7 +36,7 @@ for uri, article, title, cv_p, date0, vector in cursor.fetchall():
         time0.append(date0)
         vectors.append(np.array(json.loads(vector)[0]))
 
-okt = Okt()
+# okt = Okt()
 vectors_mat = np.array(vectors)
 
 def find_10(gijun_array):
