@@ -198,12 +198,12 @@ if __name__ == "__main__":
     # print(port)
     # host = '0.0.0.0'
     if port == '5232':
-        port ='5235'
+        port ='5238'
         host = '172.30.1.58'
         host = '0.0.0.0'
 
     elif port == '5231':
-        port = '5235'
+        port = '5238'
         host = '0.0.0.0'
     # port = 5233
     # 172.30.1.53
